@@ -1,37 +1,37 @@
 <modification>
-    <id><![CDATA[Order to PDF]]></id>
-    <version><![CDATA[1.0.0]]></version>
+    <id><![CDATA[coupon to PDF]]></id>
+    <version><![CDATA[1.21.154]]></version>
     <vqmver><![CDATA[1.00]]></vqmver>
-    <author><![CDATA[CG Smith - http://www.opendeals.info/]]></author>
+    <author><![CDATA[CGSmith, LLC - http://www.opendeals.info/]]></author>
     <file name="admin/language/english/english.php">
-        <operation>
-            <search position="after"><![CDATA[$_['button_insert'] = 'Add New';]]></search>
+        <operation error="log" >
+            <search position="after"><![CDATA[// Button]]></search>
             <add><![CDATA[$_['button_pdf_invoice']	= 'Download PDF Invoice';]]></add>
         </operation>
     </file>
 
     <file name="admin/view/theme/*/template/sale/order_info.phtml">
-        <operation>
+        <operation error="log" >
             <search position="replace"><![CDATA[<section class="page-actions">]]></search>
             <add><![CDATA[<section class="page-actions"><a onclick="window.open('<?php echo $invoice; ?>&pdf=true');" class="btn btn-primary"><?php echo $button_pdf_invoice; ?></a>]]></add>
         </operation>
     </file>
     <file name="admin/view/theme/*/template/sale/order_list.phtml">
-        <operation>
+        <operation error="log" >
             <search position="replace"><![CDATA[<section class="page-actions">]]></search>
             <add><![CDATA[<section class="page-actions"><a onclick="$('#form').attr('action', '<?php echo $invoice; ?>&pdf=true'); $('#form').attr('target', '_blank'); $('#form').submit();" class="btn btn-primary"><?php echo $button_pdf_invoice; ?></a>]]></add>
         </operation>
     </file>
     <file name="admin/controller/sale/order.php">
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA[$this->language->get('button_invoice');]]></search>
             <add><![CDATA[$this->data['button_pdf_invoice'] = $this->language->get('button_pdf_invoice');]]></add>
         </operation>
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA[invoice() {]]></search>
             <add><![CDATA[$pdf = false;]]></add>
         </operation>
-        <operation>
+        <operation error="log" >
             <search position="replace" offset="7"><![CDATA[$orders = array();]]></search>
             <add><![CDATA[$orders = array();
 if (isset($this->request->post['selected'])) {
@@ -42,7 +42,7 @@ if (isset($this->request->post['selected'])) {
 	$pdf = (isset($this->request->get['pdf'])) ? true : false;
 }]]></add>
         </operation>
-        <operation>
+        <operation error="log" >
             <search position="replace" offset="2"><![CDATA[$this->template = 'sale/order_invoice.phtml';]]></search>
             <add><![CDATA[$this->template = 'sale/order_invoice.phtml';
 			if ($pdf){
@@ -53,31 +53,31 @@ if (isset($this->request->post['selected'])) {
         </operation>
     </file>
     <file name="public/language/english/english.php">
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA[// Button]]></search>
             <add><![CDATA[$_['text_pdf']	= 'Download PDF';]]></add>
         </operation>
     </file>
     <file name="public/controller/account/order.php">
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA[$this->data['text_print'] = $this->language->get('text_print');]]></search>
             <add><![CDATA[$this->data['text_pdf'] = $this->language->get('text_pdf');
 $this->data['pdf'] = $this->url->link('account/order/coupon', 'pdf=1&order_id=' . $order_id . '&order_deal_id=' . $order_deal_id, 'SSL');]]></add>
         </operation>
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA[$this->template = 'account/order_coupon.phtml';]]></search>
-            <add><![CDATA[$this->response->setOutput(pdf($this->render(),$coupon_info->row['title']));]]></add>   
+            <add><![CDATA[if(isset($this->request->get['pdf'])) { return $this->response->setOutput(pdf($this->render(),$coupon_info->row['title'])); }]]></add>   
         </operation>
     </file>
     <file name="public/view/theme/*/template/account/order_coupon.phtml">
-        <operation>
+        <operation error="log" >
             <search position="replace"><![CDATA[<button class="btn btn-primary btn-lg" onclick="window.print();"><?php echo $text_print; ?></button>]]></search>
             <add><![CDATA[<button class="btn btn-primary btn-lg" onclick="window.print();"><?php echo $text_print; ?></button> <a class="btn btn-primary btn-lg" href="<?php echo $pdf; ?>"><?php echo $text_pdf; ?></a>]]></add>
         </operation>
     </file>
 	
     <file name="system/startup.php">
-        <operation>
+        <operation error="log" >
             <search position="after"><![CDATA['helper/helpers.php');]]></search>
             <add><![CDATA[require_once(DIR_SYSTEM . 'helper/pdf.php'); 
 			require_once(DIR_SYSTEM . 'vendor/dompdf/dompdf_config.inc.php');]]></add>
