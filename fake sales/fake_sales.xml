@@ -1,0 +1,129 @@
+<modification>
+    <id><![CDATA[Faked Sales]]></id>
+    <version><![CDATA[1.0.0]]></version>
+    <vqmver><![CDATA[1.00]]></vqmver>
+    <author><![CDATA[CG Smith - http://www.opendeals.info/]]></author>
+    
+    <file path="admin/controller/deal/" name="freepon.php">
+        <operation error="log">
+            <search position="after"><![CDATA[public function index() {]]></search>
+            <add trim="true"><![CDATA[
+    $query = $this->db->query("DESC #__freepon startat");
+    if (!$query->num_rows) { 
+        $this->db->query("ALTER TABLE `#__freepon` ADD `startat` int(11) default '0'");
+    }
+    ]]></add>
+        </operation>
+        
+        <operation error="log">
+            <search position="after"><![CDATA[$this->data['entry_stock'] = $this->language->get('entry_stock');]]></search>
+            <add trim="true"><![CDATA[ $this->data['entry_startat'] = $this->language->get('entry_startat');]]></add>
+        </operation>
+        
+        <operation error="log">
+            <search position="before"><![CDATA[if (isset($this->request->post['stock'])) {]]></search>
+            <add trim="true"><![CDATA[ if (isset($this->request->post['startat'])) {
+            $this->data['startat'] = $this->request->post['startat'];
+        } elseif (!empty($freepon_info)) {
+            $this->data['startat'] = $freepon_info['startat'];
+        } else {
+            $this->data['startat'] = '0';
+        } ]]></add>
+        </operation>
+    </file>
+    
+    <file path="admin/controller/deal/" name="deal.php">
+        <operation error="log">
+            <search position="after"><![CDATA[public function index() {]]></search>
+            <add trim="true"><![CDATA[
+    $query = $this->db->query("DESC #__deal startat");
+    if (!$query->num_rows) { 
+        $this->db->query("ALTER TABLE `#__deal` ADD `startat` int(11) default '0'");
+    }
+    ]]></add>
+        </operation>
+        
+        <operation error="log">
+            <search position="after"><![CDATA[$this->data['entry_stock'] = $this->language->get('entry_stock');]]></search>
+            <add trim="true"><![CDATA[ $this->data['entry_startat'] = $this->language->get('entry_startat');]]></add>
+        </operation>
+        
+        <operation error="log">
+            <search position="before"><![CDATA[if (isset($this->request->post['stock'])) {]]></search>
+            <add trim="true"><![CDATA[ if (isset($this->request->post['startat'])) {
+            $this->data['startat'] = $this->request->post['startat'];
+        } elseif (!empty($freepon_info)) {
+            $this->data['startat'] = $freepon_info['startat'];
+        } else {
+            $this->data['startat'] = '0';
+        } ]]></add>
+        </operation>
+    </file>
+    
+    <file path="admin/model/deal/" name="freepon.php">
+        <operation error="log">
+            <search position="after"><![CDATA[ . " `stock` = '" . (int)$data['stock'] . "', " ]]></search>
+            <add trim="true"><![CDATA[  . " `startat` = '" . (int)$data['startat'] . "', "]]></add>
+        </operation>
+       
+    </file>
+    
+    <file path="admin/model/deal/" name="deal.php">
+        <operation error="log">
+            <search position="after"><![CDATA[. " stock = " . (int) $data['stock'] . ", "]]></search>
+            <add trim="true"><![CDATA[  . " `startat` = '" . (int)$data['startat'] . "', "]]></add>
+        </operation>
+       
+    </file>
+    
+    <file path="admin/language/english/" name="english.php">
+        <operation error="log">
+            <search position="after"><![CDATA[ $_['tab_price'] = 'Price';]]></search>
+            <add trim="true"><![CDATA[ $_['entry_startat'] = 'Start At';]]></add>
+        </operation>
+    </file>
+    
+    <file path="admin/view/theme/*/template/deal/" name="freepon_form.phtml">
+        <operation error="log">
+            <search position="after" offset="7"><![CDATA[<label for="entry_stock" class="col-sm-2 control-label"><?php echo $entry_stock; ?></label>]]></search>
+            <add trim="true"><![CDATA[<div class="form-group">
+                            <label for="entry_startat" class="col-sm-2 control-label"><?php echo $entry_startat; ?></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="startat" value="<?php echo $startat; ?>" class="form-control number" id="entry_startat" min="0" />
+                            </div>
+                        </div>]]></add>
+        </operation>
+       
+    </file>
+    
+    <file path="admin/view/theme/*/template/deal/" name="deal_form.phtml">
+        <operation error="log">
+            <search position="after" offset="6"><![CDATA[<label for="entry_stock" class="col-sm-2 control-label"><?php echo $entry_stock; ?></label>]]></search>
+            <add trim="true"><![CDATA[<div class="form-group">
+                            <label for="entry_startat" class="col-sm-2 control-label"><?php echo $entry_startat; ?></label>
+                            <div class="col-sm-9">
+                                <input type="text" name="startat" value="<?php echo $startat; ?>" class="form-control number" id="entry_startat" min="0" />
+                            </div>
+                        </div>]]></add>
+        </operation>
+       
+    </file>
+    
+    <file path="public/model/deal/" name="freepon.php">
+        <operation error="log">
+            <search position="after"><![CDATA[$freepon['sold_out'] = false;]]></search>
+            <add trim="true"><![CDATA[if($freepon['startat'] > $freepon['downloaded']) {$freepon['downloaded'] =  $freepon['startat'];}]]></add>
+        </operation>
+       
+    </file>
+    <file path="public/model/deal/" name="deal.php">
+        <operation error="log">
+            <search position="after"><![CDATA[ $deal['tipped'] = false;]]></search>
+            <add trim="true"><![CDATA[if($deal['startat'] > $deal['current_orders']) {$deal['current_orders'] =  $deal['startat'];}]]></add>
+        </operation>
+       
+    </file>
+    
+   
+    
+</modification>
