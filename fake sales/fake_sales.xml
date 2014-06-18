@@ -1,7 +1,7 @@
 <modification>
     <id><![CDATA[Faked Sales]]></id>
-    <version><![CDATA[1.0.0]]></version>
-    <vqmver><![CDATA[1.00]]></vqmver>
+    <version><![CDATA[1.0.1]]></version>
+    <vqmver><![CDATA[1.0.0]]></vqmver>
     <author><![CDATA[CG Smith - http://www.opendeals.info/]]></author>
     
     <file path="admin/controller/deal/" name="freepon.php">
@@ -52,8 +52,8 @@
             <search position="before"><![CDATA[if (isset($this->request->post['stock'])) {]]></search>
             <add trim="true"><![CDATA[ if (isset($this->request->post['startat'])) {
             $this->data['startat'] = $this->request->post['startat'];
-        } elseif (!empty($freepon_info)) {
-            $this->data['startat'] = $freepon_info['startat'];
+        } elseif (!empty($deal_info)) {
+            $this->data['startat'] = $deal_info['startat'];
         } else {
             $this->data['startat'] = '0';
         } ]]></add>
